@@ -67,5 +67,11 @@ public class VolunteerFormApiController {
     public List<VolunteerForm> getVolunteerForm() {
         return volunteerFormRepository.findAll();
     }
+
+    @GetMapping("/find-id-by-title")
+    public ResponseEntity<Long> findVolunteerFormIdByTitle(@RequestParam String title) {
+        Long formId = volunteerFormRepository.findIdByTitle(title);
+        return ResponseEntity.ok(formId);
+    }
 }
 
