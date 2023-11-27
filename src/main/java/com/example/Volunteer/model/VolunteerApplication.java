@@ -3,10 +3,12 @@ package com.example.Volunteer.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Table(name = "volunteer_application")
 public class VolunteerApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,12 +20,11 @@ public class VolunteerApplication {
     @ManyToOne
     @JoinColumn(name = "info_id")
     private Info info;
-
-    @Enumerated(EnumType.STRING)
-    private ApplicationStatus status;
+    @Column(name = "status")
+    private String status;
 
     @Column(name = "applicationdate")
-    private LocalDateTime applicationDate;
+    private LocalDate applicationDate;
 
     public Long getId() {
         return id;
@@ -49,19 +50,19 @@ public class VolunteerApplication {
         this.info = info;
     }
 
-    public ApplicationStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(ApplicationStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public LocalDateTime getApplicationDate() {
+    public LocalDate getApplicationDate() {
         return applicationDate;
     }
 
-    public void setApplicationDate(LocalDateTime applicationDate) {
+    public void setApplicationDate(LocalDate applicationDate) {
         this.applicationDate = applicationDate;
     }
 }
