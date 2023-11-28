@@ -22,4 +22,6 @@ public class Info {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Info() {
+    }
 }

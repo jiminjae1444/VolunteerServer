@@ -44,4 +44,8 @@ public class VolunteerForm {
         volunteerLists.add(volunteerList);
         volunteerList.setVolunteerForm(this);
     }
+    public boolean isClosed() {
+        return LocalDate.now().isAfter(end_date);
+    }
+
 }

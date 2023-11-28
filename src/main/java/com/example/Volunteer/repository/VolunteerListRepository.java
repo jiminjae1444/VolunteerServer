@@ -1,5 +1,6 @@
 package com.example.Volunteer.repository;
 
+import com.example.Volunteer.model.VolunteerForm;
 import com.example.Volunteer.model.VolunteerList;
 import org.springframework.data.jpa.repository.JpaRepository;
 
