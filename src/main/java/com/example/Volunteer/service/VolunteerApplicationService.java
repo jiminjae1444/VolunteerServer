@@ -91,7 +91,7 @@ public class VolunteerApplicationService {
                 throw new ApplicationException("봉사 모집이 마감되었습니다.");
             }
         } else {
-            throw new ApplicationException("봉사 시작일이 지나지 않았습니다.");
+            throw new ApplicationException("봉사 신청일이 지났습니다.");
         }
     }
 
