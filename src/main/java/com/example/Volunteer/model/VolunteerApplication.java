@@ -1,10 +1,10 @@
 package com.example.Volunteer.model;
 
+import com.example.Volunteer.controller.VolunteerApplicationRequest;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -25,6 +25,9 @@ public class VolunteerApplication {
 
     @Column(name = "applicationdate")
     private LocalDate applicationDate;
+
+    public VolunteerApplication(VolunteerApplicationRequest applicationRequest) {
+    }
 
     public Long getId() {
         return id;

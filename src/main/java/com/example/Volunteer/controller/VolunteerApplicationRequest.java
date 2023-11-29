@@ -1,28 +1,23 @@
 package com.example.Volunteer.controller;
 
 public class VolunteerApplicationRequest {
-        private Long volunteerFormId;
-        private Long userId;
+        private String volunteerFormName;
+        private String username;
 
-        // 추가 필요한 필드들 (봉사 신청과 관련된 정보들)
-
-        public Long getVolunteerFormId() {
-            return volunteerFormId;
-        }
-
-        public void setVolunteerFormId(Long volunteerFormId) {
-            this.volunteerFormId = volunteerFormId;
-        }
-
-        public Long getUserId() {
-            return userId;
-        }
-
-        public void setUserId(Long userId) {
-            this.userId = userId;
-        }
-
-        // 추가 getter 및 setter 메서드
-
+    public String getUsername() {
+        return username;
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getVolunteerFormName() {
+        return volunteerFormName;
+    }
+
+    public void setVolunteerFormName(String volunteerFormName) {
+        this.volunteerFormName = volunteerFormName;
+    }
+}
 

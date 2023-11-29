@@ -3,6 +3,7 @@ package com.example.Volunteer.controller;
 import com.example.Volunteer.model.User;
 import com.example.Volunteer.repository.UserRepository;
 import com.example.Volunteer.service.UserService;
+import com.example.Volunteer.service.VolunteerApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ public class UserApiController {
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private VolunteerApplicationService volunteerApplicationService;
 
     @GetMapping("/{username}")
     public ResponseEntity<User> getUser(@PathVariable String username) {
@@ -75,6 +78,14 @@ public class UserApiController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @PostMapping("/updateExpiredForms")
+    public void updateExpiredForms() {
+        volunteerApplicationService.updateVolunteerHoursForExpiredForms();
+    }
+    @PostMapping("/updateVolunteerGrade")
+    public void updateVolunteerGrade() {
+        volunteerApplicationService.updateVolunteerGradeForAllUsers();
     }
 }
 

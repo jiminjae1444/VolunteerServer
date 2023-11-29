@@ -73,5 +73,15 @@ public class VolunteerFormApiController {
         Long formId = volunteerFormRepository.findIdByTitle(title);
         return ResponseEntity.ok(formId);
     }
+    @GetMapping("/getByTitle/{title}")
+    public ResponseEntity<VolunteerForm> getVolunteerFormByTitle(@PathVariable String title) {
+        VolunteerForm volunteerForm = volunteerFormRepository.findByTitle(title);
+
+        if (volunteerForm != null) {
+            return new ResponseEntity<>(volunteerForm, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
 
