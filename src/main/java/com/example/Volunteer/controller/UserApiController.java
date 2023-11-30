@@ -31,6 +31,11 @@ public class UserApiController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/id/{username}")
+    public ResponseEntity<Long> getUserIdByUsername(@PathVariable String username) {
+        Long userId = userService.getUserIdByUsername(username);
+        return ResponseEntity.ok(userId);
+    }
 
     @GetMapping("/by-username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {

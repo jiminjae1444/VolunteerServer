@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Integer.parseInt;
+
 
 @Service
 public class VolunteerApplicationService {
@@ -37,6 +39,7 @@ public class VolunteerApplicationService {
             }
         }
     }
+
     public void updateVolunteerGradeForAllUsers() {
         List<Info> allUsers = infoRepository.findAll();
 
@@ -76,6 +79,7 @@ public class VolunteerApplicationService {
     public List<VolunteerApplication> getApplicationsByUsername(String username) {
         return applicationRepository.findByApplicantUsername(username);
     }
+
     public void apply(VolunteerApplicationRequest applicationRequest) {
         // 신청 처리 로직 추가
         // 예시로 시작일 전이고, 모집 인원이 넘지 않으면서 우선순위에 따라 처리하도록 함
@@ -171,9 +175,8 @@ public class VolunteerApplicationService {
             // 모집 인원이 다 차지 않았으면 선착순 처리
             if (currentApplications < recruitmentSlots) {
                 // 추가적인 처리가 필요하다면 이 부분에 로직을 추가하면 됩니다.
-
                 // 선착순으로 신청 정보 저장
-                applicationRepository.save(new VolunteerApplication(applicationRequest));
+                applicationRepository.save(new VolunteerApplication(applicationRequest, volunteerFormRepository, userRepository, infoRepository));
             } else {
                 // 모집 인원이 다 찼으면 해당 메시지를 클라이언트에 전달하거나 예외를 던져 처리할 수 있습니다.
                 throw new ApplicationException("봉사 모집인원을 초과합니다.");
@@ -208,7 +211,7 @@ public class VolunteerApplicationService {
                     // 추가적인 처리가 필요하다면 이 부분에 로직을 추가하면 됩니다.
 
                     // 선착순으로 신청 정보 저장
-                    applicationRepository.save(new VolunteerApplication(applicationRequest));
+                    applicationRepository.save(new VolunteerApplication(applicationRequest, volunteerFormRepository, userRepository, infoRepository));
                 } else {
                     // 모집 인원이 다 찼으면 해당 메시지를 클라이언트에 전달하거나 예외를 던져 처리할 수 있습니다.
                     throw new ApplicationException("봉사 모집인원을 초과합니다.");
@@ -239,24 +242,22 @@ public class VolunteerApplicationService {
             return false;
         }
     }
-    // 다른 필요한 의존성 주입 및 메서드 생략
-//        public void cancelVolunteerApplication(String volunteerFormTitle, String loggedInUsername) {
-//            // 봉사폼의 제목과 신청자의 username을 기반으로 봉사 신청 정보를 찾기
-//            Optional<VolunteerApplication> optionalApplication = applicationRepository.findByVolunteerFormTitleAndInfoUsername(volunteerFormTitle, loggedInUsername);
-//
-//            if (optionalApplication.isPresent()) {
-//                VolunteerApplication application = optionalApplication.get();
-//
-//                // 봉사 시작일이 지나지 않은 경우에만 취소 처리
-//                if (isBeforeStartDate(application.getVolunteerForm().getId())) {
-//                    applicationRepository.delete(application);
-//                } else {
-//                    throw new ApplicationException("봉사 시작일이 지나 취소할 수 없습니다.");
-//                }
-//            } else {
-//                throw new ApplicationException("봉사 신청이 존재하지 않습니다.");
-//            }
-//        }
 
-        // 다른 필요한 메서드들 및 의존성 주입 생략
+    public List<VolunteerApplication> getVolunteerApplications(Long userId) {
+        return applicationRepository.findByUserId(userId);
     }
+
+
+    public void cancelVolunteerApplication(long applicationId) {
+        // applicationId에 해당하는 봉사 신청을 찾아서 삭제
+        Optional<VolunteerApplication> optionalApplication = applicationRepository.findById(applicationId);
+        if (optionalApplication.isPresent()) {
+            VolunteerApplication application = optionalApplication.get();
+            applicationRepository.delete(application);
+        } else {
+            // 해당 ID에 해당하는 봉사 신청이 없는 경우 예외 처리
+            throw new VolunteerApplicationNotFoundException("Volunteer Application not found for id: " + applicationId);
+        }
+    }
+}
+

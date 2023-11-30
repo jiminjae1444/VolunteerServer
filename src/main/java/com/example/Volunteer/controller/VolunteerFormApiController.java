@@ -83,5 +83,10 @@ public class VolunteerFormApiController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/getVolunteerForm/{volunteerFormId}")
+    public ResponseEntity<VolunteerForm> getVolunteerForm(@PathVariable long volunteerFormId) {
+        VolunteerForm volunteerForm = volunteerFormService.getVolunteerFormById(volunteerFormId);
+        return ResponseEntity.ok(volunteerForm);
+    }
 }
 

@@ -12,4 +12,6 @@ public interface ApplicationRepository extends CrudRepository<VolunteerApplicati
     List<VolunteerApplication> findByApplicantUsername(String username);
 
     int countByVolunteerFormId(String volunteerFormName);
+
+    List<VolunteerApplication> findByUserId(Long userId);
 }

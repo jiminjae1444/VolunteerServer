@@ -21,14 +21,18 @@ public class UserService {
         return userRepository.save(user);
     }
 
-        public User findByUsername(String username) {
-            return userRepository.findByUsername(username);
-        }
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 
-//    public String updateUser(User updatedUser) {
-//        // 여기에서 사용 자 정보를 업데이트하는 로직을 구현
-//        // userRepository.save(updatedUser); 를 사용하여 정보를 업데이트
-//        return userRepository.save(updatedUser);
-//    }
+    public Long getUserIdByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return user.getId();
+        } else {
+            throw new ResourceNotFoundException("User not found with username: " + username);
+        }
+    }
 }
+
 

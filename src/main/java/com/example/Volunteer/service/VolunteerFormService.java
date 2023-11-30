@@ -26,5 +26,9 @@ public class VolunteerFormService {
             throw new VolunteerNotFoundException("봉사 정보를 찾을 수 없습니다. ID: " + volunteerId);
         }
     }
+
+    public VolunteerForm getVolunteerFormById(long volunteerFormId) {
+        return volunteerFormRepository.findById(volunteerFormId) .orElseThrow(() -> new ResourceNotFoundException("VolunteerForm not found with id: " + volunteerFormId));
+    }
 }
 

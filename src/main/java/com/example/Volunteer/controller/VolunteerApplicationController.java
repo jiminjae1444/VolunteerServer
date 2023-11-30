@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -43,21 +44,23 @@ public class VolunteerApplicationController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); // 400 Bad Request
         }
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<VolunteerApplication>> getVolunteerApplications(@PathVariable Long userId) {
+        List<VolunteerApplication> applications = volunteerApplicationService.getVolunteerApplications(userId);
+        return ResponseEntity.ok(applications);
+    }
 
-//    @PostMapping("/cancel")
-//    public ResponseEntity cancelVolunteerApplication(@RequestParam String volunteerName) {
-//        try {
-//            // 봉사폼을 찾기 위해 volunteerName을 사용
-//            VolunteerForm volunteerForm = (VolunteerForm) volunteerFormRepository.findByTitle(volunteerName)
-//                    .orElseThrow(() -> new ApplicationException("봉사폼을 찾을 수 없습니다."));
-//
-//            // 취소 처리
-//            cancelVolunteerApplication(volunteerForm.getId());
-//            return new ResponseEntity<>(HttpStatus.OK); // 200 OK
-//        } catch (ApplicationException e) {
-//            // 에러 발생 시 클라이언트에게 에러 응답 전송
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); // 400 Bad Request
-//        }
-//    }
+    @DeleteMapping("/{applicationId}")
+    public ResponseEntity<Void> cancelVolunteerApplication(@PathVariable long applicationId) {
+        try {
+            // 서비스를 사용하여 봉사 신청을 취소하는 로직을 수행
+            volunteerApplicationService.cancelVolunteerApplication(applicationId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            // 취소 중 오류가 발생한 경우
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
+
 
