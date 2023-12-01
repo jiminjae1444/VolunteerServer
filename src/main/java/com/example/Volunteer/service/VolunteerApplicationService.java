@@ -32,7 +32,7 @@ public class VolunteerApplicationService {
         List<VolunteerForm> expiredForms = volunteerFormRepository.findExpiredForms(LocalDate.now());
 
         for (VolunteerForm form : expiredForms) {
-            List<VolunteerApplication> applications = applicationRepository.findByVolunteerForm(form);
+            List<VolunteerApplication> applications = applicationRepository.findByVolunteerForm(form.getId());
 
             for (VolunteerApplication application : applications) {
                 updateVolunteerHoursAndGrade(application);
@@ -67,7 +67,7 @@ public class VolunteerApplicationService {
         int recruitmentHours = volunteerForm.getRecruitment_hours();
 
         // 해당 봉사 신청에 참여한 모든 사용자들의 정보 가져오기
-        List<VolunteerApplication> applications = applicationRepository.findByVolunteerForm(volunteerForm);
+        List<VolunteerApplication> applications = applicationRepository.findByVolunteerForm(volunteerForm.getId());
 
         for (VolunteerApplication app : applications) {
             Info info = app.getInfo();
@@ -76,9 +76,7 @@ public class VolunteerApplicationService {
         }
     }
 
-    public List<VolunteerApplication> getApplicationsByUsername(String username) {
-        return applicationRepository.findByApplicantUsername(username);
-    }
+
 
     public void apply(VolunteerApplicationRequest applicationRequest) {
         // 신청 처리 로직 추가
@@ -242,12 +240,6 @@ public class VolunteerApplicationService {
             return false;
         }
     }
-
-    public List<VolunteerApplication> getVolunteerApplications(Long userId) {
-        return applicationRepository.findByUserId(userId);
-    }
-
-
     public void cancelVolunteerApplication(long applicationId) {
         // applicationId에 해당하는 봉사 신청을 찾아서 삭제
         Optional<VolunteerApplication> optionalApplication = applicationRepository.findById(applicationId);

@@ -44,9 +44,9 @@ public class VolunteerApplicationController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); // 400 Bad Request
         }
     }
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<VolunteerApplication>> getVolunteerApplications(@PathVariable Long userId) {
-        List<VolunteerApplication> applications = volunteerApplicationService.getVolunteerApplications(userId);
+    @GetMapping("/info/{infoId}/applications")
+    public ResponseEntity<List<VolunteerApplication>> getVolunteerApplicationsForInfo(@PathVariable long infoId) {
+        List<VolunteerApplication> applications = applicationRepository.findByInfoId(infoId);
         return ResponseEntity.ok(applications);
     }
 

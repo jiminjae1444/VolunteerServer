@@ -7,11 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface ApplicationRepository extends CrudRepository<VolunteerApplication,Long> {
-    List<VolunteerApplication> findByVolunteerForm(VolunteerForm volunteerForm);
-
-    List<VolunteerApplication> findByApplicantUsername(String username);
+    List<VolunteerApplication> findByVolunteerForm(Long volunteerFormId);
 
     int countByVolunteerFormId(String volunteerFormName);
-
-    List<VolunteerApplication> findByUserId(Long userId);
+    List<VolunteerApplication> findByInfoId(Long infoId);
 }
