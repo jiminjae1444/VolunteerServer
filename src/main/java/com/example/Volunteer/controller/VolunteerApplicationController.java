@@ -9,6 +9,7 @@ import com.example.Volunteer.repository.InfoRepository;
 import com.example.Volunteer.repository.UserRepository;
 import com.example.Volunteer.repository.VolunteerFormRepository;
 import com.example.Volunteer.service.VolunteerApplicationService;
+import com.example.Volunteer.service.VolunteerFormNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class VolunteerApplicationController {
     private VolunteerApplicationService volunteerApplicationService;
 
     @PostMapping("/apply")
-    public ResponseEntity applyForVolunteer(@RequestBody VolunteerApplicationRequest applicationRequest) {
+    public ResponseEntity applyForVolunteer(@RequestBody VolunteerApplicationRequest applicationRequest) throws VolunteerFormNotFoundException {
         try {
             // 신청 처리
           volunteerApplicationService.apply(applicationRequest);

@@ -23,23 +23,26 @@ public class ListController {
     private VolunteerListRepository volunteerListRepository;
 
     private List<VolunteerList> volunteerList = new ArrayList<>();
+
     @GetMapping("/getVolunteerList")
     public List<VolunteerList> getVolunteerList() {
         // VolunteerListRepository에서 모든 데이터를 가져오기
         List<VolunteerList> allVolunteerList = volunteerListRepository.findAll();
-
-        // 현재 날짜를 가져오는 코드 (Java 8 이상에서 제공)
-        LocalDate currentDate = LocalDate.now();
-
-        // 마감일이 지나지 않은 봉사 리스트 필터링
-        List<VolunteerList> openVolunteerList = new ArrayList<>();
-        for (VolunteerList volunteer : allVolunteerList) {
-            LocalDate endDate = volunteer.getVolunteerForm().getEnd_date();
-            if (endDate != null && endDate.isAfter(currentDate)) {
-                openVolunteerList.add(volunteer);
-            }
-        }
-        return openVolunteerList;
+        return allVolunteerList;
     }
-    // 기타 필요한 엔드포인트 및 메서드 추가 가능
 }
+
+//        // 현재 날짜를 가져오는 코드 (Java 8 이상에서 제공)
+//        LocalDate currentDate = LocalDate.now();
+//
+//        // 마감일이 지나지 않은 봉사 리스트 필터링
+//        List<VolunteerList> openVolunteerList = new ArrayList<>();
+//        for (VolunteerList volunteer : allVolunteerList) {
+//            LocalDate endDate = volunteer.getVolunteerForm().getEnd_date();
+//            if (endDate != null && endDate.isAfter(currentDate)) {
+//                openVolunteerList.add(volunteer);
+//            }
+//        }
+//        return openVolunteerList;
+//    }
+        // 기타 필요한 엔드포인트 및 메서드 추가 가능

@@ -35,6 +35,8 @@ public class VolunteerForm {
     private String priority;
     @OneToMany(mappedBy = "volunteerForm", cascade = CascadeType.ALL)
     private List<VolunteerList> volunteerLists = new ArrayList<>();
+    @OneToMany(mappedBy = "volunteerForm", cascade = CascadeType.ALL)
+    private List<VolunteerApplication> volunteerApplications = new ArrayList<>();
     @Transient
     private String start_date_str; // 안드로이드 앱에서 전송되는 start_date 문자열
     @Transient

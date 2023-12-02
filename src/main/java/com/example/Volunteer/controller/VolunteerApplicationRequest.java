@@ -2,14 +2,14 @@ package com.example.Volunteer.controller;
 
 public class VolunteerApplicationRequest {
         private String volunteerFormName;
-        private String username;
+        private String applicantUsername;
 
-    public String getUsername() {
-        return username;
+    public String getApplicantUsername() {
+        return applicantUsername;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setApplicantUsername(String applicantUsername) {
+        this.applicantUsername = applicantUsername;
     }
 
     public String getVolunteerFormName() {
