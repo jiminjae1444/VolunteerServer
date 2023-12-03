@@ -25,5 +25,8 @@ public interface ApplicationRepository extends CrudRepository<VolunteerApplicati
 //    @Transactional
 //    @Query("UPDATE VolunteerApplication a SET a.status = '신청완료' WHERE a.volunteerForm.startDate < :currentDate")
 //    void updateStatusForApplicationsWithStartDateInPast(@Param("currentDate") LocalDate currentDate);
-    
+@Query("SELECT va FROM VolunteerApplication va " +
+        "JOIN va.volunteerForm vf " +
+        "WHERE vf.start_date < :currentDate")
+List<VolunteerApplication> findByStatusAndApplicationDateBefore(@Param("currentDate") LocalDate currentDate);
 }

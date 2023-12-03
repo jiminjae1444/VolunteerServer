@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 
@@ -29,17 +28,55 @@ public class VolunteerApplicationService {
     @Autowired
     private UserRepository userRepository;
 
+    private Set<Long> processedInfoFormPairs = new HashSet<>();
+
     public void updateVolunteerHoursForExpiredForms() {
-        List<VolunteerForm> expiredForms = volunteerFormRepository.findExpiredForms(LocalDate.now());
+        // 현재 날짜를 가져오기
+        LocalDate currentDate = LocalDate.now();
 
+        // 현재 날짜를 기준으로 종료일(end_date)이 지난 봉사 폼을 가져오기
+        List<VolunteerForm> expiredForms = volunteerFormRepository.findExpiredForms(currentDate);
+
+        // 모든 봉사 신청 정보 가져오기
+        Iterable<VolunteerApplication> applicationsAll = applicationRepository.findAll();
+
+        // 봉사 폼과 봉사 신청 정보 비교
         for (VolunteerForm form : expiredForms) {
-            List<VolunteerApplication> applications = applicationRepository.findByVolunteerForm(form.getId());
-
-            for (VolunteerApplication application : applications) {
-                updateVolunteerHoursAndGrade(application);
+            for (VolunteerApplication application : applicationsAll) {
+                // 현재 날짜보다 지난 봉사 폼과 매칭된 봉사 신청 정보 처리
+                if (Objects.equals(application.getVolunteerForm().getId(), form.getId())) {
+                    updateVolunteerHoursAndGrade(form, application);
+                }
             }
         }
     }
+
+    private void updateVolunteerHoursAndGrade(VolunteerForm form, VolunteerApplication application) {
+        int recruitmentHours = form.getRecruitment_hours();
+        Long infoId = application.getInfo().getId();
+        Long formId = form.getId();
+
+        // 이미 처리된 (infoId, formId) 쌍이라면 건너뛰기
+        if (processedInfoFormPairs.contains(getInfoFormPairKey(infoId, formId))) {
+            return;
+        }
+
+        Optional<Info> optionalInfo = infoRepository.findById(infoId);
+        if (optionalInfo.isPresent()) {
+            Info info = optionalInfo.get();
+            info.setTotal_hours(info.getTotal_hours() + recruitmentHours);
+            infoRepository.save(info);
+
+            // 처리된 (infoId, formId) 쌍 저장
+            processedInfoFormPairs.add(getInfoFormPairKey(infoId, formId));
+        }
+    }
+
+    private Long getInfoFormPairKey(Long infoId, Long formId) {
+        return infoId * 1000000L + formId; // 임의의 방법으로 Long으로 변환
+    }
+
+
 
     public void updateVolunteerGradeForAllUsers() {
         List<Info> allUsers = infoRepository.findAll();
@@ -61,23 +98,6 @@ public class VolunteerApplicationService {
         }
         infoRepository.save(userInfo);
     }
-
-    private void updateVolunteerHoursAndGrade(VolunteerApplication application) {
-        // 해당 사용자의 봉사 시간을 업데이트
-        VolunteerForm volunteerForm = application.getVolunteerForm();
-        int recruitmentHours = volunteerForm.getRecruitment_hours();
-
-        // 해당 봉사 신청에 참여한 모든 사용자들의 정보 가져오기
-        List<VolunteerApplication> applications = applicationRepository.findByVolunteerForm(volunteerForm.getId());
-
-        for (VolunteerApplication app : applications) {
-            Info info = app.getInfo();
-            info.setTotal_hours(info.getTotal_hours() + recruitmentHours);
-            infoRepository.save(info);
-        }
-    }
-
-
     public void apply(@NotNull VolunteerApplicationRequest applicationRequest) throws VolunteerFormNotFoundException {
         // 신청 처리 로직 추가
         // 예시로 시작일 전이고, 모집 인원이 넘지 않으면서 우선순위에 따라 처리하도록 함
@@ -291,6 +311,23 @@ public class VolunteerApplicationService {
         } else {
             // 해당 ID에 해당하는 봉사 신청이 없는 경우 예외 처리
             throw new VolunteerApplicationNotFoundException("Volunteer Application not found for id: " + applicationId);
+        }
+    }
+    // 시작일이 지난 경우 신청대기인 봉사 신청 상태를 신청완료로 업데이트
+    public void updateStatusForExpiredApplications() {
+        // 현재 날짜를 가져오기
+        LocalDate currentDate = LocalDate.now();
+
+        // 시작일이 지난 봉사 신청을 조회
+        List<VolunteerApplication> expiredApplications = applicationRepository.findByStatusAndApplicationDateBefore(currentDate);
+
+        // 각 봉사 신청 상태를 신청완료로 업데이트
+        for (VolunteerApplication application : expiredApplications) {
+            if(application.getStatus().equals("신청완료")){
+                continue;
+            }
+            application.setStatus("신청완료");
+            applicationRepository.save(application);
         }
     }
 }

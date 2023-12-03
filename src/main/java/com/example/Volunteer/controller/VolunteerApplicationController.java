@@ -63,6 +63,15 @@ public class VolunteerApplicationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    @PostMapping("/update-status-for-expired-applications")
+    public ResponseEntity<String> updateStatusForExpiredApplications() {
+        try {
+            volunteerApplicationService.updateStatusForExpiredApplications();
+            return new ResponseEntity<>("Status updated successfully for expired applications.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to update status for expired applications.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
 
 

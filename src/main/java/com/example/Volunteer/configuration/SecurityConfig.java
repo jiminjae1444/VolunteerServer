@@ -17,7 +17,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login","/signup","/api/volunteer/create","/api/user/by-username/{username}","/api/user-info/{usernam}","/api/volunteer/list/create","/api/user/{username}","/api/volunteer/list/getVolunteerList","/api/volunteer/volunteerForms","/api/volunteer/getVolunteerForm/{volunteerFormId}","/api/volunteer-applications/info/{infoId}/applications","/api/volunteer-applications/{applicationId}","/api/user/updateVolunteerGrade","/api/user/updateExpiredForms","/api/volunteer-applications/apply").permitAll()
+                .antMatchers("/login","/signup","/api/volunteer/create","/api/user/by-username/{username}","/api/user-info/{usernam}","/api/volunteer/list/create","/api/user/{username}","/api/volunteer/list/getVolunteerList","/api/volunteer/volunteerForms","/api/volunteer/getVolunteerForm/{volunteerFormId}","/api/volunteer-applications/info/{infoId}/applications","/api/volunteer-applications/{applicationId}","/api/user/updateVolunteerGrade","/api/user/updateExpiredForms","/api/volunteer-applications/apply","/api/volunteer-applications/update-status-for-expired-applications").permitAll()
                 .anyRequest().authenticated();
     }
     @Bean
