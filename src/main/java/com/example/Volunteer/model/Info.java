@@ -28,4 +28,13 @@ public class Info {
     private List<VolunteerApplication> volunteerApplications = new ArrayList<>();
     public Info() {
     }
+
+    @Override
+    public String toString() {
+        return "Info{" +
+                "id=" + id +
+                ", total_hours=" + total_hours +
+                ", grade='" + grade + '\'' +
+                '}';
+    }
 }

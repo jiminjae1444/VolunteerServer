@@ -29,7 +29,10 @@ public class VolunteerApplication {
     @Column(name = "applicationdate")
     private LocalDate applicationDate;
 
+
+
     public VolunteerApplication(VolunteerApplicationRequest applicationRequest) {
+
     }
 
     public Long getId() {

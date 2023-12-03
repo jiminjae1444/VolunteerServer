@@ -1,9 +1,6 @@
 package com.example.Volunteer.controller;
 
-import com.example.Volunteer.model.Info;
-import com.example.Volunteer.model.User;
-import com.example.Volunteer.model.VolunteerApplication;
-import com.example.Volunteer.model.VolunteerForm;
+import com.example.Volunteer.model.*;
 import com.example.Volunteer.repository.ApplicationRepository;
 import com.example.Volunteer.repository.InfoRepository;
 import com.example.Volunteer.repository.UserRepository;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/volunteer-applications")
@@ -46,9 +44,12 @@ public class VolunteerApplicationController {
         }
     }
     @GetMapping("/info/{infoId}/applications")
-    public ResponseEntity<List<VolunteerApplication>> getVolunteerApplicationsForInfo(@PathVariable long infoId) {
+    public ResponseEntity<List<VolunteerApplicationDTO>> getVolunteerApplicationsForInfo(@PathVariable long infoId) {
         List<VolunteerApplication> applications = applicationRepository.findByInfoId(infoId);
-        return ResponseEntity.ok(applications);
+        List<VolunteerApplicationDTO> applicationDTOs = applications.stream()
+                .map(VolunteerApplicationDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(applicationDTOs);
     }
 
     @DeleteMapping("/{applicationId}")

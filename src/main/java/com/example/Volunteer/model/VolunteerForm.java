@@ -35,19 +35,21 @@ public class VolunteerForm {
     private String priority;
     @OneToMany(mappedBy = "volunteerForm", cascade = CascadeType.ALL)
     private List<VolunteerList> volunteerLists = new ArrayList<>();
-    @OneToMany(mappedBy = "volunteerForm", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "volunteerForm", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<VolunteerApplication> volunteerApplications = new ArrayList<>();
-    @Transient
-    private String start_date_str; // 안드로이드 앱에서 전송되는 start_date 문자열
-    @Transient
-    private String end_date_str; // 안드로이드 앱에서 전송되는 end_date 문자열
 
-    public void addVolunteerList(VolunteerList volunteerList) {
-        volunteerLists.add(volunteerList);
-        volunteerList.setVolunteerForm(this);
+    @Override
+    public String toString() {
+        return "VolunteerForm{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", location='" + location + '\'' +
+                ", description='" + description + '\'' +
+                ", start_date=" + start_date +
+                ", end_date=" + end_date +
+                ", slots=" + slots +
+                ", recruitment_hours=" + recruitment_hours +
+                ", priority='" + priority + '\'' +
+                '}';
     }
-    public boolean isClosed() {
-        return LocalDate.now().isAfter(end_date);
-    }
-
 }
