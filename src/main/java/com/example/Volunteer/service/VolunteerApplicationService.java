@@ -6,6 +6,8 @@ import com.example.Volunteer.model.*;
 import com.example.Volunteer.repository.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -46,6 +48,8 @@ public class VolunteerApplicationService {
                 // 현재 날짜보다 지난 봉사 폼과 매칭된 봉사 신청 정보 처리
                 if (Objects.equals(application.getVolunteerForm().getId(), form.getId())) {
                     updateVolunteerHoursAndGrade(form, application);
+                    //시간업데이트 되면 봉사 신청테이블에서 신청정보 삭제
+                    applicationRepository.delete(application);
                 }
             }
         }
@@ -225,7 +229,7 @@ public class VolunteerApplicationService {
     // 위 메서드의 수정된 부분
     public String isBeforeStartDateCheck(LocalDate startDate) {
         try {
-            return LocalDate.now().isBefore(startDate) ? "신청 대기" : "신청 완료";
+            return LocalDate.now().isBefore(startDate) ? "신청 확정" : "신청 완료";
         } catch (Exception e) {
             // 예외가 발생하면 로그에 기록하고 적절한 방식으로 처리합니다.
             e.printStackTrace(); // 실제 프로덕션 코드에서는 로깅 라이브러리를 사용하세요.

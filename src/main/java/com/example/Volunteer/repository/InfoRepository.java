@@ -17,5 +17,6 @@ public interface InfoRepository extends JpaRepository<Info,Long> {
     Optional<Info> findByUserId(long id);
 
     Optional<Object> findByUserUsername(String username);
+
 }
 
